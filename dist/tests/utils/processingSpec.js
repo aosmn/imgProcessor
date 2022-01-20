@@ -35,9 +35,13 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
         if (op[0] & 5) throw op[1]; return { value: op[0] ? op[1] : void 0, done: true };
     }
 };
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
 Object.defineProperty(exports, "__esModule", { value: true });
 var processing_1 = require("../../utils/processing");
 var fs_1 = require("fs");
+var sharp_1 = __importDefault(require("sharp"));
 describe("File loader", function () {
     it("should load image file", function () { return __awaiter(void 0, void 0, void 0, function () {
         var testFile, imgFile;
@@ -101,20 +105,23 @@ describe("File exists", function () {
         });
     }); });
 });
-// describe("File save", () => {
-//   it("should create a new file", async () => {
-//     const file = await saveFile("hello file", "./images/a.txt");
-//     const exists = await fileExists("./images/a.txt");
-//     expect(exists).toEqual(true);
-//   });
-// });
 describe("Processor", function () {
     it("should process image file", function () { return __awaiter(void 0, void 0, void 0, function () {
+        var originalFilePath, resizedPhotoBuffer, newFile;
         return __generator(this, function (_a) {
             switch (_a.label) {
-                case 0: return [4 /*yield*/, (0, processing_1.processImage)("fjord.jpg", 200, 200)];
+                case 0:
+                    originalFilePath = "./images/full/fjord.jpg";
+                    return [4 /*yield*/, (0, sharp_1.default)(originalFilePath)
+                            .resize(200, 200)
+                            .jpeg()
+                            .toBuffer()];
                 case 1:
-                    _a.sent();
+                    resizedPhotoBuffer = _a.sent();
+                    return [4 /*yield*/, (0, processing_1.processImage)("fjord.jpg", 200, 200)];
+                case 2:
+                    newFile = _a.sent();
+                    expect(resizedPhotoBuffer.equals(newFile)).toEqual(true);
                     return [2 /*return*/];
             }
         });

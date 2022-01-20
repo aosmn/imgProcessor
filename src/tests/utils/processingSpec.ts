@@ -1,5 +1,6 @@
 import { loadImage, fileExists, processImage } from "../../utils/processing";
 import { promises as fs } from "fs";
+import sharp from "sharp";
 
 describe("File loader", () => {
   it("should load image file", async () => {
@@ -30,16 +31,16 @@ describe("File exists", () => {
   });
 });
 
-// describe("File save", () => {
-//   it("should create a new file", async () => {
-//     const file = await saveFile("hello file", "./images/a.txt");
-//     const exists = await fileExists("./images/a.txt");
-//     expect(exists).toEqual(true);
-//   });
-// });
-
 describe("Processor", () => {
   it("should process image file", async () => {
-    await processImage("fjord.jpg", 200, 200);
+    const originalFilePath = `./images/full/fjord.jpg`;
+    const resizedPhotoBuffer = await sharp(originalFilePath)
+      .resize(200, 200)
+      .jpeg()
+      .toBuffer();
+
+    const newFile = await processImage("fjord.jpg", 200, 200);
+
+    expect(resizedPhotoBuffer.equals(newFile)).toEqual(true);
   });
 });

@@ -100,28 +100,26 @@ var saveFile = function (content, filePath) { return __awaiter(void 0, void 0, v
 }); };
 exports.saveFile = saveFile;
 var processImage = function (fileName, width, height) { return __awaiter(void 0, void 0, void 0, function () {
-    var originalFP, resizedPhotoBuffer, filePath;
+    var originalFilePath, newFilePath, resizedPhotoBuffer;
     return __generator(this, function (_a) {
         switch (_a.label) {
             case 0:
-                originalFP = "./images/full/".concat(fileName);
-                if (!(0, exports.fileExists)(originalFP)) return [3 /*break*/, 2];
-                return [4 /*yield*/, (0, sharp_1.default)(originalFP)
+                originalFilePath = "./images/full/".concat(fileName);
+                newFilePath = "./images/".concat(fileName.replace(".jpg", ""), "-").concat(width, "x").concat(height, ".jpg");
+                if (!!(0, exports.fileExists)(newFilePath)) return [3 /*break*/, 4];
+                if (!(0, exports.fileExists)(originalFilePath)) return [3 /*break*/, 3];
+                return [4 /*yield*/, (0, sharp_1.default)(originalFilePath)
                         .resize(width, height)
                         .jpeg()
                         .toBuffer()];
             case 1:
                 resizedPhotoBuffer = _a.sent();
-                filePath = "./images/".concat(fileName.replace(".jpg", ""), "-").concat(width, "x").concat(height, ".jpg");
-                if (!(0, exports.fileExists)(filePath)) {
-                    return [2 /*return*/, (0, exports.saveFile)(resizedPhotoBuffer, filePath)];
-                }
-                else {
-                    return [2 /*return*/, (0, exports.loadFilePath)(filePath)];
-                }
-                return [3 /*break*/, 3];
-            case 2: throw new Error("File not found");
-            case 3: return [2 /*return*/];
+                return [4 /*yield*/, (0, exports.saveFile)(resizedPhotoBuffer, newFilePath)];
+            case 2:
+                _a.sent();
+                return [3 /*break*/, 4];
+            case 3: throw new Error("File not found");
+            case 4: return [2 /*return*/, (0, exports.loadFilePath)(newFilePath)];
         }
     });
 }); };

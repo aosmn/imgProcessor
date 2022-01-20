@@ -51,22 +51,21 @@ export const processImage = async (
   width: number,
   height: number
 ) => {
-  const originalFP = `./images/full/${fileName}`;
-  if (fileExists(originalFP)) {
-    const resizedPhotoBuffer = await sharp(originalFP)
-      .resize(width, height)
-      .jpeg()
-      .toBuffer();
-    const filePath = `./images/${fileName.replace(
-      ".jpg",
-      ""
-    )}-${width}x${height}.jpg`;
-    if (!fileExists(filePath)) {
-      return saveFile(resizedPhotoBuffer, filePath);
+  const originalFilePath = `./images/full/${fileName}`;
+  const newFilePath = `./images/${fileName.replace(
+    ".jpg",
+    ""
+  )}-${width}x${height}.jpg`;
+  if (!fileExists(newFilePath)) {
+    if (fileExists(originalFilePath)) {
+      const resizedPhotoBuffer = await sharp(originalFilePath)
+        .resize(width, height)
+        .jpeg()
+        .toBuffer();
+      await saveFile(resizedPhotoBuffer, newFilePath);
     } else {
-      return loadFilePath(filePath);
+      throw new Error("File not found");
     }
-  } else {
-    throw new Error("File not found");
   }
+  return loadFilePath(newFilePath);
 };
